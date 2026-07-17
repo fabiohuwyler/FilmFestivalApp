@@ -116,21 +116,6 @@ The app is designed to work seamlessly out of the box for a film festival but ca
 
 - **Views**: Customize the `ListView` and `DetailView` files for your specific use case.
 
----
-
-## Screenshots
-
-### Program View
-
-![Program View](path/to/screenshot1.png)
-
-### Movie Detail
-
-![Movie Detail](path/to/screenshot2.png)
-
-### Location Detail
-
-![Location Detail](path/to/screenshot3.png)
 
 ---
 
@@ -148,6 +133,6 @@ This project is licensed under the MIT License. See the `LICENSE` file for detai
 
 ## Acknowledgments
 
-Special thanks to the **Your Filmfestival Festival** for inspiring this app.  
+Special thanks to the **Queersicht LGBTIAQ*-Filmfestival** for inspiring this app.  
 
 Built with love by **Fabio Huwyler**.
