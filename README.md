@@ -58,9 +58,9 @@ This app is not only tailored for Queersicht Festival but also serves as a **sta
 
    ```bash
 
-   git clone https://github.com/yourusername/filmfestival-app.git
+   git clone https://github.com/fabiohuwyler/FilmFestivalApp.git
 
-   cd filmfestival-app
+   cd FilmFestivalApp
 
    ```
 
