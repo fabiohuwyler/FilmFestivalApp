@@ -133,6 +133,6 @@ This project is licensed under the MIT License. See the `LICENSE` file for detai
 
 ## Acknowledgments
 
-Special thanks to the **Queersicht LGBTIAQ*-Filmfestival** for inspiring this app.  
+Special thanks to the **Queersicht LGBTIAQ-Filmfestival** for inspiring this app.  
 
 Built with love by **Fabio Huwyler**.
