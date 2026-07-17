@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>ABCGramercyFine-Light 2.otf</string>
+		<string>ABCGramercyFine-LightItalic 2.otf</string>
+		<string>ABCGramercyDisplay-Bold-Trial.otf</string>
+		<string>Cardo-Regular.ttf</string>
+		<string>Cardo-Italic.ttf</string>
+		<string>CormorantGaramond-Regular.ttf</string>
+		<string>CormorantGaramond-Italic.ttf</string>
+		<string>EBGaramond-Regular.ttf</string>
+		<string>EBGaramond-Italic.ttf</string>
+		<string>Fraunces72pt-SemiBold.ttf</string>
+		<string>Inter_28pt-Medium.ttf</string>
+		<string>Inter_28pt-Regular.ttf</string>
+	</array>
+</dict>
+</plist>

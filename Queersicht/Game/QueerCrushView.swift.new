@@ -1,0 +1,218 @@
+import SwiftUI
+
+struct QueerCrushView: View {
+    @StateObject private var gameBoard = GameBoard()
+    @Environment(\.dismiss) private var dismiss
+    @State private var showingInstructions = true
+    
+    private let tileSize: CGFloat = 38
+    private let spacing: CGFloat = 4
+    
+    var body: some View {
+        ZStack {
+            // Background
+            Color("pastelPink")
+                .ignoresSafeArea()
+            
+            VStack(spacing: 12) {
+                // Header
+                HStack {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.title2)
+                            .foregroundColor(.white)
+                    }
+                    
+                    Spacer()
+                    
+                    // Timer and Score
+                    HStack(spacing: 24) {
+                        Text("Time: \(Int(gameBoard.timeRemaining))")
+                            .font(.abcGramercyDisplayBold(size: 24))
+                            .foregroundColor(.white)
+                        
+                        Text("Score: \(gameBoard.score)")
+                            .font(.abcGramercyDisplayBold(size: 24))
+                            .foregroundColor(.white)
+                    }
+                    
+                    Spacer()
+                    
+                    // Help Button
+                    Button {
+                        showingInstructions = true
+                    } label: {
+                        Image(systemName: "questionmark.circle.fill")
+                            .font(.title2)
+                            .foregroundColor(.white)
+                    }
+                }
+                .padding(.horizontal)
+                .padding(.top, 8)
+                
+                // Festival Meter
+                FestivalMeterView(progress: Double(gameBoard.score) / Double(GameBoard.targetScore))
+                    .frame(height: 36)
+                    .padding(.horizontal)
+                
+                Spacer()
+                    .frame(height: 20)
+                
+                // Game Grid
+                VStack(spacing: spacing) {
+                    ForEach(0..<GameBoard.gridSize, id: \.self) { row in
+                        HStack(spacing: spacing) {
+                            ForEach(0..<GameBoard.gridSize, id: \.self) { col in
+                                TileView(
+                                    tile: gameBoard.tiles[row][col],
+                                    isSelected: gameBoard.selectedTile?.id == gameBoard.tiles[row][col].id,
+                                    onSwipe: { direction in
+                                        handleSwipe(from: CGPoint(x: col, y: row), direction: direction)
+                                    }
+                                )
+                                .frame(width: tileSize, height: tileSize)
+                                .onTapGesture {
+                                    gameBoard.selectTile(at: CGPoint(x: col, y: row))
+                                }
+                            }
+                        }
+                    }
+                }
+                .padding(12)
+                .background(
+                    RoundedRectangle(cornerRadius: 12)
+                        .fill(Color.white.opacity(0.95))
+                        .shadow(color: Color.black.opacity(0.1), radius: 8, x: 0, y: 2)
+                )
+                .padding(.horizontal)
+                
+                Spacer()
+                
+                // Restart Button
+                Button {
+                    gameBoard.resetGame()
+                } label: {
+                    Text("Restart Game")
+                        .font(.abcGramercyDisplayBold(size: 17))
+                        .foregroundColor(.white)
+                        .padding(.vertical, 12)
+                        .padding(.horizontal, 32)
+                        .background(
+                            Capsule()
+                                .fill(Color.black.opacity(0.25))
+                                .shadow(color: Color.black.opacity(0.1), radius: 4, y: 2)
+                        )
+                }
+                .padding(.bottom, 16)
+            }
+            .sheet(isPresented: $showingInstructions) {
+                InstructionsView()
+            }
+            
+            // Game Over Overlay
+            if gameBoard.isGameOver {
+                GameOverView(hasWon: gameBoard.hasWon, score: gameBoard.score) {
+                    gameBoard.resetGame()
+                }
+            }
+        }
+    }
+    
+    private func handleSwipe(from position: CGPoint, direction: SwipeDirection) {
+        var targetPosition = position
+        switch direction {
+        case .up:
+            targetPosition.y -= 1
+        case .down:
+            targetPosition.y += 1
+        case .left:
+            targetPosition.x -= 1
+        case .right:
+            targetPosition.x += 1
+        }
+        
+        gameBoard.swapTiles(from: position, to: targetPosition)
+    }
+}
+
+struct InstructionsView: View {
+    @Environment(\.dismiss) private var dismiss
+    
+    var body: some View {
+        NavigationView {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 24) {
+                    // German Instructions
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Spielanleitung")
+                            .font(.abcGramercyDisplayBold(size: 24))
+                            .foregroundColor(Color("theDark"))
+                        
+                        Text("• Tausche benachbarte Symbole, um mindestens 3 gleiche in einer Reihe zu verbinden\n• Fülle den Festival-Meter innerhalb von 60 Sekunden\n• Sammle 500 Punkte, um zu gewinnen\n• Tippe auf ein Symbol und dann auf ein benachbartes, oder wische, um zu tauschen\n• Regenbogen, Filmrollen, Herzen und andere queere Symbole bringen unterschiedliche Punkte")
+                            .font(.abcGramercyFineLight(size: 17))
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.bottom, 8)
+                    
+                    // French Instructions
+                    VStack(alignment: .leading, spacing: 12) {
+                        Text("Comment jouer")
+                            .font(.abcGramercyDisplayBold(size: 24))
+                            .foregroundColor(Color("theDark"))
+                        
+                        Text("• Échangez des symboles adjacents pour aligner au moins 3 identiques\n• Remplissez le mètre du festival en 60 secondes\n• Marquez 500 points pour gagner\n• Tapez sur un symbole puis sur un adjacent, ou glissez pour échanger\n• Les arcs-en-ciel, bobines de film, cœurs et autres symboles queer rapportent différents points")
+                            .font(.abcGramercyFineLight(size: 17))
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .padding()
+            }
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .foregroundColor(Color("theDark"))
+                    }
+                }
+            }
+        }
+    }
+}
+
+struct FestivalMeterView: View {
+    let progress: Double
+    
+    var body: some View {
+        GeometryReader { geometry in
+            ZStack(alignment: .leading) {
+                // Background
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(Color.black.opacity(0.25))
+                
+                // Progress Bar
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(
+                        LinearGradient(
+                            gradient: Gradient(colors: [Color("theDark"), .pink]),
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    )
+                    .frame(width: max(0, min(geometry.size.width * progress, geometry.size.width)))
+                    .animation(.easeInOut(duration: 0.3), value: progress)
+                
+                // Festival Text
+                Text("Festival")
+                    .font(.abcGramercyDisplayBold(size: 17))
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .shadow(color: .black.opacity(0.2), radius: 1, y: 1)
+            }
+        }
+    }
+}
